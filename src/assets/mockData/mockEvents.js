@@ -18,8 +18,8 @@ export const mockEvents = [
     {
         title: 'Team lunch',
         notes: 'Discuss project updates and team building',
-        start: new Date(2023, 9, 21, 12, 0, 0),
-        end: new Date(2023, 9, 21, 13, 0, 0),
+        start: new Date(),
+        end: addHours(new Date(), 2), // Ends at 12:00 PM
         allDay: false,
         bgColor: '#f0f0f0',
         user: {
