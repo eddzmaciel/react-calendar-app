@@ -3,6 +3,7 @@ import { addHours } from "date-fns";
 
 export const mockEvents = [
     {
+        _id: new Date().getTime().toString() + 2,
         title: 'Board meeting',
         notes: 'Discuss quarterly results and future strategy',
         start: new Date(),
@@ -16,6 +17,7 @@ export const mockEvents = [
         }
     },
     {
+        _id: new Date().getTime().toString(),
         title: 'Team lunch',
         notes: 'Discuss project updates and team building',
         start: new Date(),

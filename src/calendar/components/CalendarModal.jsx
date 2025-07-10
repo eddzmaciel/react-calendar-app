@@ -1,5 +1,5 @@
 import { addHours, set } from 'date-fns';
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import Modal from 'react-modal'
 
@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'; // Import SweetAlert2 styles
+import { useUiStore,useCalendarStore } from '../../hooks';
 
 
 const customStyles = {
@@ -30,8 +31,12 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
-    const [isOpen, setIsOpen] = useState(true); // State to manage selected event, if needed
+    // importing our custom methods from the hook
+    const {isDateModalOpen,closeDateModal} = useUiStore(); // Assuming you have a custom hook to manage UI state
+    const {activeEvent,startSavingEvent} = useCalendarStore(); // Assuming you have a custom hook to manage calendar state
 
+
+    // const [isOpen, setIsOpen] = useState(true); // State to manage selected event, if needed
     const [formSubmited, setFormSubmitted] = useState(false); // State to manage form submission status
 
     // usestate for formManagement
@@ -51,9 +56,16 @@ export const CalendarModal = () => {
     }, [title, formSubmited]);
 
 
+    useEffect(() => {
+        if (activeEvent !== null) {
+            setFormValues({ ...activeEvent });
+        }
+    }, [activeEvent]);
+
     const onCloseModal = () => {
         console.log('Modal closed');
-        setIsOpen(false); // Close the modal
+        closeDateModal(); // Close the modal using the reducer
+        // isDateModalOpen(false); // Close the modal
         // Here you can add logic to close the modal, e.g., update state
     }
 
@@ -75,9 +87,7 @@ export const CalendarModal = () => {
     const onSubmit = (event) => {
         event.preventDefault(); // Prevent default form submission
         console.log('Form submitted:', formValues);
-
         setFormSubmitted(true); // Set form submission status
-
         // Here you can add logic to handle form submission, e.g., save the event
         // After saving, you might want to close the modal
         // TODO: 
@@ -93,20 +103,23 @@ export const CalendarModal = () => {
             });
             return;
         }
+
+        startSavingEvent(formValues); // Call the method to save the event
         // remover errores en pantalla
         // cerrar modal
-        // limpiar formulario
+        closeDateModal(); 
+        // limpiar formulario y quitar los errores
+        setFormSubmitted(false);
         // onCloseModal();
     };
 
     const dateDifferences = (start, end) => {
-        
         return (end - start) / (1000 * 60 * 60); //
     };
 
     return (
         <Modal
-            isOpen={isOpen} // Change this to a state variable to control modal visibility
+            isOpen={isDateModalOpen} // Change this to a state variable to control modal visibility
             onRequestClose={onCloseModal} // Handle modal close
             style={customStyles}
             className="modal"

@@ -1,18 +1,27 @@
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { CalendarEvent, CalendarModal, Navbar } from "../";
+import { CalendarEvent, CalendarModal, FabAddNew, Navbar } from "../";
 import { localizer, getCalendarMessagesES } from "../../helpers/";
 
 // mock
 import { mockEvents } from "../../assets/";
 import { useState } from 'react';
 
+// 
+import { useUiStore,useCalendarStore } from '../../hooks'; // Adjust the path if your hook is in a different location
 
-const events = mockEvents;
+
+
 
 export const CalendarPage = () => {
 
+  // importing our reducers - custom hook
+  const { openDateModal } = useUiStore();
+
+  const { events,setActiveEvent } = useCalendarStore(); // Assuming you have a custom hook to manage calendar state
+
+  // Assuming you have a custom hook to manage UI state
   // getting the last view from localStorage
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
 
@@ -34,9 +43,12 @@ export const CalendarPage = () => {
 
   const onDoubleClick = (event) => {
     console.log('Event double clicked:', event);
+    openDateModal(); // Open the date modal
+
   }
   const onSelect = (event) => {
     console.log('Event onSelect:', event);
+    setActiveEvent(event); // Set the active event
   }
 
 
@@ -69,6 +81,7 @@ export const CalendarPage = () => {
         onView={onViewChanged}
       />
       <CalendarModal />
+      <FabAddNew />
     </>
   )
 }
