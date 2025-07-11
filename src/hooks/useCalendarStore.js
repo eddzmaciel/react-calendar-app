@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { onAddNewEvent, onSetActiveEvent } from "../store/calendar/calendarSlice";
+import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from "../store/calendar/calendarSlice";
 
 
 // creating my custom hooks to manage the reducers
@@ -14,11 +14,11 @@ export const useCalendarStore = () => {
 
     const startSavingEvent = async (calendarEvent) =>{
         // TODO: call the API to save the event
-        
         // 
         if(calendarEvent._id){
             // * update
             console.log('Updating event', calendarEvent);
+            dispatch(onUpdateEvent({...calendarEvent}));
 
         } else{
             // * create
@@ -26,8 +26,12 @@ export const useCalendarStore = () => {
             // * este id va a ser removido cuando se haga la llamada a la API
             dispatch(onAddNewEvent({...calendarEvent, _id: new Date().getTime() }));
         }
+    };
 
+    const startDeletingEvent = async () => {
+        dispatch(onDeleteEvent());;
     }
+
 
     return {
         // * properties
@@ -35,6 +39,7 @@ export const useCalendarStore = () => {
         activeEvent,
         // * methods
         setActiveEvent,
-        startSavingEvent
+        startSavingEvent,
+        startDeletingEvent
     }
 }

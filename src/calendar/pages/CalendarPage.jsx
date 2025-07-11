@@ -1,15 +1,15 @@
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { CalendarEvent, CalendarModal, FabAddNew, Navbar } from "../";
+import { CalendarEvent, CalendarModal, FabAddNew, Navbar, FabDelete } from "../";
 import { localizer, getCalendarMessagesES } from "../../helpers/";
 
 // mock
-import { mockEvents } from "../../assets/";
 import { useState } from 'react';
 
 // 
-import { useUiStore,useCalendarStore } from '../../hooks'; // Adjust the path if your hook is in a different location
+import { useUiStore, useCalendarStore } from '../../hooks'; // Adjust the path if your hook is in a different location
+import { useSelector } from 'react-redux';
 
 
 
@@ -19,7 +19,10 @@ export const CalendarPage = () => {
   // importing our reducers - custom hook
   const { openDateModal } = useUiStore();
 
-  const { events,setActiveEvent } = useCalendarStore(); // Assuming you have a custom hook to manage calendar state
+  const { events, setActiveEvent } = useCalendarStore(); // Assuming you have a custom hook to manage calendar state
+
+  // using state for calendar
+  const { activeEvent } = useSelector(state => state.calendar);
 
   // Assuming you have a custom hook to manage UI state
   // getting the last view from localStorage
@@ -27,7 +30,6 @@ export const CalendarPage = () => {
 
 
   const eventStyleGetter = (event, start, end, isSelected) => {
-
     // console.log({ event, start, end, isSelected });
     const style = {
       backgroundColor: '#3174ad',
@@ -56,7 +58,9 @@ export const CalendarPage = () => {
     localStorage.setItem('lastView', view);
     // not really necesary 
     setLastView(view);
-  } 
+  }
+
+
 
 
 
@@ -82,6 +86,8 @@ export const CalendarPage = () => {
       />
       <CalendarModal />
       <FabAddNew />
+      {/* show button only if there is an active event */}
+      { activeEvent && <FabDelete /> }
     </>
   )
 }

@@ -84,7 +84,7 @@ export const CalendarModal = () => {
         });
     }
 
-    const onSubmit = (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault(); // Prevent default form submission
         console.log('Form submitted:', formValues);
         setFormSubmitted(true); // Set form submission status
@@ -104,7 +104,7 @@ export const CalendarModal = () => {
             return;
         }
 
-        startSavingEvent(formValues); // Call the method to save the event
+       await startSavingEvent(formValues); // Call the method to save the event
         // remover errores en pantalla
         // cerrar modal
         closeDateModal(); 
