@@ -1,8 +1,8 @@
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import { CalendarEvent, CalendarModal, FabAddNew, Navbar, FabDelete } from "../";
-import { localizer, getCalendarMessagesES } from "../../helpers/";
+import { CalendarEvent, CalendarModal, FabAddNew, Navbar, FabDelete } from "..";
+import { localizer, getCalendarMessagesES } from "../../helpers";
 
 // mock
 import { useState } from 'react';
