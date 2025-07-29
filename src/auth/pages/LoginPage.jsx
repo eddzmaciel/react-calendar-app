@@ -1,7 +1,7 @@
 
 
 import { useEffect } from 'react';
-import { useAuthStore, useForm } from '../../hooks';
+import {  useAuthStore, useForm } from '../../hooks';
 import './LoginPage.css';
 import Swal from 'sweetalert2';
 
@@ -18,7 +18,8 @@ const registerFormFields = {
 };
 
 export const LoginPage = () => {
-    const { startLogin,errorMessage } = useAuthStore();
+    const { startLogin, errorMessage, startRegister } = useAuthStore();
+
 
     const { loginEmail, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
     const { registerName, registerEmail, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
@@ -29,16 +30,26 @@ export const LoginPage = () => {
         await startLogin({ email: loginEmail, password: loginPassword });
     };
 
-    const onRegisterSubmit = (event) => {
+    const onRegisterSubmit = async (event) => {
         event.preventDefault();
+        if (registerEmail === '' || registerName === '' || registerPassword === '' || registerPassword2 === '') {
+            Swal.fire('Error', 'Todos los campos son obligatorios', 'error');
+            return;
+        }
+        if (registerPassword !== registerPassword2) {
+            Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+            return;
+        }
         console.log({ registerName, registerEmail, registerPassword, registerPassword2 });
+        await startRegister({ registerName, registerEmail, registerPassword });
+    
 
     }
 
     // para estar al pendiente de los cambios, necesitamos un useEffect
     useEffect(() => {
         if (errorMessage !== undefined) {
-            Swal.fire('Error en la autenticación', errorMessage, 'error');
+            Swal.fire('Error', errorMessage, 'error');
         }
     }, [errorMessage]);
 
